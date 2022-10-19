@@ -236,7 +236,7 @@ export default class VideoRecorder extends Component {
       this.props.onTurnOnCamera()
     }
 
-    navigator.mediaDevices
+    return navigator.mediaDevices
       .enumerateDevices()
       .then((mediaDevices) => {
         const videoDevices = mediaDevices.filter((x) => x.kind === 'videoinput')
@@ -278,7 +278,7 @@ export default class VideoRecorder extends Component {
           this.props.constraints
         )
 
-        navigator.mediaDevices
+        return navigator.mediaDevices
           .getUserMedia(currentConstraints)
           .catch((err) => {
             // there's a bug in chrome in some windows computers where using `ideal` in the constraints throws a NotReadableError
@@ -300,6 +300,8 @@ export default class VideoRecorder extends Component {
   }
 
   handleSwitchCamera = () => {
+    this.turnOffCamera()
+
     if (this.props.onSwitchCamera) {
       this.props.onSwitchCamera()
     }
@@ -314,7 +316,8 @@ export default class VideoRecorder extends Component {
       return this.handleError(new ReactVideoRecorderDeviceUnavailableError())
     }
 
-    if (index + 1 > maxIndex) return this.turnOnCamera(availableDeviceIds[0])
+    if (index + 1 > maxIndex) { return this.turnOnCamera(availableDeviceIds[0])
+
     return this.turnOnCamera(availableDeviceIds[index + 1])
   }
 
@@ -323,7 +326,7 @@ export default class VideoRecorder extends Component {
       this.props.onTurnOffCamera()
     }
 
-    this.stream && this.stream.getTracks().forEach((stream) => stream.stop())
+    this.state.stream && this.state.stream.getTracks().forEach((stream) => stream.stop())
     this.setState({
       isCameraOn: false
     })
@@ -337,7 +340,6 @@ export default class VideoRecorder extends Component {
       return
     }
 
-    this.stream = stream
     this.setState({
       isCameraOn: true,
       stream: stream
@@ -411,7 +413,7 @@ export default class VideoRecorder extends Component {
     const dataCheckInterval = 2000 / chunkSize
 
     // in some browsers (FF/S), data only shows up
-    // after a certain amount of time ~everyt 2 seconds
+    // after a certain amount of time ~every 2 seconds
     const blobCount = this.recordedBlobs.length
     if (blobCount > dataCheckInterval && blobCount % dataCheckInterval === 0) {
       const blob = new window.Blob(this.recordedBlobs, {
@@ -531,7 +533,7 @@ export default class VideoRecorder extends Component {
           isRecording: true
         })
         this.startedAt = new Date().getTime()
-        this.mediaRecorder = new window.MediaRecorder(this.stream, options)
+        this.mediaRecorder = new window.MediaRecorder(this.state.stream, options)
         this.mediaRecorder.addEventListener('stop', this.handleStop)
         this.mediaRecorder.addEventListener('error', this.handleError)
         this.mediaRecorder.addEventListener(
