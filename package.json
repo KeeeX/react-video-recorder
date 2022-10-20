@@ -21,12 +21,6 @@
     "build-storybook": "build-storybook",
     "semantic-release": "semantic-release"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && npm test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
   "lint-staged": {
     "**/*.js": [
       "prettier --write",
@@ -101,7 +95,7 @@
     "start-server-and-test": "^1.7.11",
     "styled-components": "4"
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/fbaiodias/react-video-recorder.git"
