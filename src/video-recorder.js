@@ -316,7 +316,7 @@ export default class VideoRecorder extends Component {
       return this.handleError(new ReactVideoRecorderDeviceUnavailableError())
     }
 
-    if (index + 1 > maxIndex) { return this.turnOnCamera(availableDeviceIds[0])
+    if (index + 1 > maxIndex) return this.turnOnCamera(availableDeviceIds[0])
 
     return this.turnOnCamera(availableDeviceIds[index + 1])
   }
@@ -326,7 +326,8 @@ export default class VideoRecorder extends Component {
       this.props.onTurnOffCamera()
     }
 
-    this.state.stream && this.state.stream.getTracks().forEach((stream) => stream.stop())
+    this.state.stream &&
+      this.state.stream.getTracks().forEach((stream) => stream.stop())
     this.setState({
       isCameraOn: false
     })
@@ -533,7 +534,10 @@ export default class VideoRecorder extends Component {
           isRecording: true
         })
         this.startedAt = new Date().getTime()
-        this.mediaRecorder = new window.MediaRecorder(this.state.stream, options)
+        this.mediaRecorder = new window.MediaRecorder(
+          this.state.stream,
+          options
+        )
         this.mediaRecorder.addEventListener('stop', this.handleStop)
         this.mediaRecorder.addEventListener('error', this.handleError)
         this.mediaRecorder.addEventListener(
