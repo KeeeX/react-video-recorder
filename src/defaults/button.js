@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Button = styled.button`
   background: ${(props) => props.backgroundColor};
@@ -16,11 +16,11 @@ const Button = styled.button`
   :hover {
     background: #eee;
   }
-`
+`;
 
 Button.defaultProps = {
-  color: 'black',
-  backgroundColor: 'white'
-}
+  color: "black",
+  backgroundColor: "white",
+};
 
-export default Button
+export default Button;

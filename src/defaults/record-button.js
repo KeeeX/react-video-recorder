@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
+import React from "react";
+import styled from "styled-components";
 
 const Button = styled.button`
   background: ${(props) => props.backgroundColor};
@@ -16,20 +16,20 @@ const Button = styled.button`
   :hover {
     background: #fb6d42;
   }
-`
+`;
 
 const RecWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
+`;
 
 const ButtonBorder = styled.div`
   border: 8px solid rgba(255, 255, 255, 0.4);
   height: 80px;
   width: 80px;
   border-radius: 50%;
-`
+`;
 const Instructions = styled.div`
   font-family: Arial;
   font-size: 14px;
@@ -37,35 +37,35 @@ const Instructions = styled.div`
   letter-spacing: 1.75px;
   display: flex;
   margin-bottom: 20px;
-`
+`;
 
 const InstuctionsHighlight = styled.div`
   font-weight: 700;
   color: #dc6547;
   padding: 0 5px;
-`
+`;
 
 Button.defaultProps = {
-  color: 'black',
-  backgroundColor: 'white'
-}
+  color: "black",
+  backgroundColor: "white",
+};
 
-const RecordButton = ({ t, ...props }) => (
+const RecordButton = ({t, ...props}) => (
   <RecWrapper>
     <Instructions>
-      <div>{t('PRESS')} </div>
-      <InstuctionsHighlight> {t('REC')} </InstuctionsHighlight>
-      {t('WHEN READY')}
+      <div>{t("PRESS")} </div>
+      <InstuctionsHighlight> {t("REC")} </InstuctionsHighlight>
+      {t("WHEN READY")}
     </Instructions>
 
     <ButtonBorder>
       <Button {...props} />
     </ButtonBorder>
   </RecWrapper>
-)
+);
 
 RecordButton.propTypes = {
-  t: PropTypes.func
-}
+  t: PropTypes.func,
+};
 
-export default RecordButton
+export default RecordButton;

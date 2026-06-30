@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const ErrorView = () => (
   <div>
@@ -7,6 +7,6 @@ const ErrorView = () => (
     <br />
     Please restart it and try again 👍
   </div>
-)
+);
 
-export default ErrorView
+export default ErrorView;
