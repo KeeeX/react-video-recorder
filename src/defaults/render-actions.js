@@ -1,11 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import Button from './button'
-import RecordButton from './record-button'
-import StopButton from './stop-button'
-import Timer from './timer'
-import Countdown from './countdown'
+import PropTypes from "prop-types";
+import React from "react";
+// eslint-disable-next-line import-x/no-named-as-default
+import styled from "styled-components";
+
+import Button from "./button.js";
+import Countdown from "./countdown.js";
+import RecordButton from "./record-button.js";
+import StopButton from "./stop-button.js";
+import Timer from "./timer.js";
 
 const ActionsWrapper = styled.div`
   position: absolute;
@@ -15,38 +17,37 @@ const ActionsWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`;
 
+// eslint-disable-next-line max-lines-per-function
 const Actions = ({
-  t,
-  isVideoInputSupported,
-  isInlineRecordingSupported,
-  thereWasAnError,
-  isRecording,
-  isCameraOn,
-  streamIsReady,
-  isConnecting,
-  isRunningCountdown,
-  isReplayingVideo,
   countdownTime,
-  timeLimit,
-  showReplayControls,
-  replayVideoAutoplayAndLoopOff,
-  useVideoInput,
-
-  onTurnOnCamera,
-  onTurnOffCamera,
+  isCameraOn,
+  isConnecting,
+  isInlineRecordingSupported,
+  isRecording,
+  isReplayingVideo,
+  isRunningCountdown,
+  isVideoInputSupported,
+  // onConfirm,
   onOpenVideoInput,
+  // onPauseRecording,
+  // onResumeRecording,
   onStartRecording,
   onStopRecording,
-  onPauseRecording,
-  onResumeRecording,
   onStopReplaying,
-  onConfirm
+  // onTurnOffCamera,
+  onTurnOnCamera,
+  // replayVideoAutoplayAndLoopOff,
+  // showReplayControls,
+  streamIsReady,
+  t,
+  thereWasAnError,
+  timeLimit,
+  useVideoInput,
 }) => {
   const renderContent = () => {
-    const shouldUseVideoInput =
-      !isInlineRecordingSupported && isVideoInputSupported
+    const shouldUseVideoInput = !isInlineRecordingSupported && isVideoInputSupported;
 
     if (
       (!isInlineRecordingSupported && !isVideoInputSupported) ||
@@ -54,96 +55,80 @@ const Actions = ({
       isConnecting ||
       isRunningCountdown
     ) {
-      return null
+      return null;
     }
 
     if (isReplayingVideo) {
       return (
-        <Button
-          type='button'
-          onClick={onStopReplaying}
-          data-qa='start-replaying'
-        >
-          {t('Use another video')}
+        <Button data-qa="start-replaying" onClick={onStopReplaying} type="button">
+          {t("Use another video")}
         </Button>
-      )
+      );
     }
 
     if (isRecording) {
-      return (
-        <StopButton
-          type='button'
-          onClick={onStopRecording}
-          data-qa='stop-recording'
-        />
-      )
+      return <StopButton data-qa="stop-recording" onClick={onStopRecording} type="button" />;
     }
 
     if (isCameraOn && streamIsReady) {
       return (
-        <RecordButton
-          t={t}
-          type='button'
-          onClick={onStartRecording}
-          data-qa='start-recording'
-        />
-      )
+        <RecordButton data-qa="start-recording" onClick={onStartRecording} t={t} type="button" />
+      );
     }
 
     if (useVideoInput) {
       return (
-        <Button type='button' onClick={onOpenVideoInput} data-qa='open-input'>
-          {t('Upload a video')}
+        <Button data-qa="open-input" onClick={onOpenVideoInput} type="button">
+          {t("Upload a video")}
         </Button>
-      )
+      );
     }
 
     return shouldUseVideoInput ? (
-      <Button type='button' onClick={onOpenVideoInput} data-qa='open-input'>
-        {t('Record a video')}
+      <Button data-qa="open-input" onClick={onOpenVideoInput} type="button">
+        {t("Record a video")}
       </Button>
     ) : (
-      <Button type='button' onClick={onTurnOnCamera} data-qa='turn-on-camera'>
-        {t('Turn my camera ON')}
+      <Button data-qa="turn-on-camera" onClick={onTurnOnCamera} type="button">
+        {t("Turn my camera ON")}
       </Button>
-    )
-  }
+    );
+  };
 
   return (
     <div>
-      {isRecording && <Timer timeLimit={timeLimit} />}
-      {isRunningCountdown && <Countdown countdownTime={countdownTime} />}
+      {isRecording ? <Timer timeLimit={timeLimit} /> : null}
+      {isRunningCountdown ? <Countdown countdownTime={countdownTime} /> : null}
       <ActionsWrapper>{renderContent()}</ActionsWrapper>
     </div>
-  )
-}
+  );
+};
 
 Actions.propTypes = {
-  t: PropTypes.func,
-  isVideoInputSupported: PropTypes.bool,
-  isInlineRecordingSupported: PropTypes.bool,
-  thereWasAnError: PropTypes.bool,
-  isRecording: PropTypes.bool,
-  isCameraOn: PropTypes.bool,
-  streamIsReady: PropTypes.bool,
-  isConnecting: PropTypes.bool,
-  isRunningCountdown: PropTypes.bool,
   countdownTime: PropTypes.number,
-  timeLimit: PropTypes.number,
-  showReplayControls: PropTypes.bool,
-  replayVideoAutoplayAndLoopOff: PropTypes.bool,
+  isCameraOn: PropTypes.bool,
+  isConnecting: PropTypes.bool,
+  isInlineRecordingSupported: PropTypes.bool,
+  isRecording: PropTypes.bool,
   isReplayingVideo: PropTypes.bool,
-  useVideoInput: PropTypes.bool,
-
-  onTurnOnCamera: PropTypes.func,
-  onTurnOffCamera: PropTypes.func,
+  isRunningCountdown: PropTypes.bool,
+  isVideoInputSupported: PropTypes.bool,
+  onConfirm: PropTypes.func,
   onOpenVideoInput: PropTypes.func,
-  onStartRecording: PropTypes.func,
-  onStopRecording: PropTypes.func,
   onPauseRecording: PropTypes.func,
   onResumeRecording: PropTypes.func,
+  onStartRecording: PropTypes.func,
+  onStopRecording: PropTypes.func,
   onStopReplaying: PropTypes.func,
-  onConfirm: PropTypes.func
-}
+  onTurnOffCamera: PropTypes.func,
+  onTurnOnCamera: PropTypes.func,
+  replayVideoAutoplayAndLoopOff: PropTypes.bool,
+  showReplayControls: PropTypes.bool,
+  streamIsReady: PropTypes.bool,
+  t: PropTypes.func,
+  thereWasAnError: PropTypes.bool,
+  timeLimit: PropTypes.number,
+  useVideoInput: PropTypes.bool,
+};
 
-export default Actions
+export default Actions;

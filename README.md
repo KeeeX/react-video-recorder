@@ -15,20 +15,20 @@ yarn add react-video-recorder react react-dom prop-types styled-components
 Basic usage [(edit in stakblitz)](https://stackblitz.com/edit/react-video-recorder-demo):
 
 ```js
-import React from 'react'
-import { render } from 'react-dom'
-import VideoRecorder from 'react-video-recorder'
+import React from "react";
+import {render} from "react-dom";
+import VideoRecorder from "react-video-recorder";
 
 const App = () => (
   <VideoRecorder
     onRecordingComplete={(videoBlob) => {
       // Do something with the video...
-      console.log('videoBlob', videoBlob)
+      console.log("videoBlob", videoBlob);
     }}
   />
-)
+);
 
-render(<App />, document.getElementById('root'))
+render(<App />, document.getElementById("root"));
 ```
 
 Also check the [Storybook](https://react-video-recorder.vercel.app/) for more demos and usage examples.
@@ -100,7 +100,3 @@ Run the storybook demo
 ```sh
 yarn start
 ```
-
-### Committing
-
-To commit run yarn start then commit. We use Husky to verify before committing.

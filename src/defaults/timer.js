@@ -1,15 +1,17 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import PropTypes from "prop-types";
+import React, {PureComponent} from "react";
+// eslint-disable-next-line import-x/no-named-as-default
+import styled from "styled-components";
 
 const Text = styled.div`
   position: absolute;
+  top: 50px;
   top: 50px;
   right: 50px;
   font-family: Menlo, monospace;
   font-size: 28px;
   text-shadow: 1px 2px rgba(0, 0, 0, 0.5);
-`
+`;
 
 const RecIcon = styled.div`
   width: 16px;
@@ -19,66 +21,69 @@ const RecIcon = styled.div`
   float: left;
   margin: 2px 8px;
   margin-left: 0;
-`
+`;
 
-class Timer extends Component {
+const SECOND_MS = 1000;
+const SECONDS_IN_A_MIN = 60;
+
+const pad = (unit) => {
+  const str = `${unit}`;
+  const padStr = "00";
+  return padStr.substring(0, padStr.length - str.length) + str;
+};
+
+const getState = (seconds) => {
+  const minutes = Math.floor(seconds / SECONDS_IN_A_MIN);
+
+  const humanTime =
+    minutes === 0
+      ? `${seconds - minutes * SECONDS_IN_A_MIN}s`
+      : `${minutes}:${pad(seconds - minutes * SECONDS_IN_A_MIN)}`;
+
+  return {
+    seconds: seconds,
+    human: humanTime,
+  };
+};
+
+class Timer extends PureComponent {
   static propTypes = {
     timeLimit: PropTypes.number,
-    defaultText: PropTypes.string
+    defaultText: PropTypes.string,
+  };
+
+  constructor(props) {
+    super(props);
+
+    const nextSeconds = props.timeLimit ? props.timeLimit / SECOND_MS : 0;
+
+    this.state = getState(nextSeconds);
   }
 
-  constructor (props) {
-    super(props)
-
-    const nextSeconds = props.timeLimit ? props.timeLimit / 1000 : 0
-
-    this.state = this.getState(nextSeconds)
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
-  componentWillUnmount () {
-    clearInterval(this.timer)
-  }
-
-  componentDidMount () {
-    const { timeLimit } = this.props
+  componentDidMount() {
+    const {timeLimit} = this.props;
     this.timer = setInterval(() => {
-      const { seconds } = this.state
-      const nextSeconds = timeLimit ? seconds - 1 : seconds + 1
+      const {seconds} = this.state;
+      const nextSeconds = timeLimit ? seconds - 1 : seconds + 1;
 
-      const nextState = this.getState(nextSeconds)
-      this.setState(nextState)
-    }, 1000)
+      const nextState = this.getState(nextSeconds);
+      this.setState(nextState);
+    }, SECOND_MS);
   }
 
-  pad (unit) {
-    var str = '' + unit
-    var pad = '00'
-    return pad.substring(0, pad.length - str.length) + str
-  }
-
-  getState (seconds) {
-    const minutes = Math.floor(seconds / 60)
-
-    const humanTime =
-      minutes !== 0
-        ? `${minutes}:${this.pad(seconds - minutes * 60)}`
-        : `${seconds - minutes * 60}s`
-
-    return {
-      seconds: seconds,
-      human: humanTime
-    }
-  }
-
-  render () {
-    const defaultText = this.props.defaultText || '0:00'
+  render() {
+    const defaultText = this.props.defaultText || "0:00";
     return (
       <Text {...this.props}>
         <RecIcon />
         {this.state.human || defaultText}
       </Text>
-    )
+    );
   }
 }
 
-export default Timer
+export default Timer;

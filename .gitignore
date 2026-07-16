@@ -62,9 +62,5 @@ typings/
 
 lib
 
-storybook-static
-
 .DS_Store
 .npmrc
-
-package-lock.json

@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import PropTypes from "prop-types";
+import React, {PureComponent} from "react";
+// eslint-disable-next-line import-x/no-named-as-default
+import styled from "styled-components";
 
 const Root = styled.div`
   position: absolute;
@@ -14,40 +15,43 @@ const Root = styled.div`
   font-family: Menlo, monospace;
   font-size: 100px;
   text-shadow: 1px 2px rgba(0, 0, 0, 0.5);
-`
+`;
 
-export default class Countdown extends Component {
+const MS_SECOND = 1000;
+
+export default class Countdown extends PureComponent {
   static propTypes = {
-    countdownTime: PropTypes.number
-  }
+    countdownTime: PropTypes.number,
+  };
 
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
-      number: props.countdownTime / 1000
-    }
+      number: props.countdownTime / MS_SECOND,
+    };
   }
 
-  componentDidMount () {
-    this.timeout = setTimeout(this.updateNumber, 1000)
+  componentDidMount() {
+    this.timeout = setTimeout(this.updateNumber, MS_SECOND);
   }
 
-  componentWillUnmount () {
-    clearInterval(this.timeout)
+  componentWillUnmount() {
+    clearInterval(this.timeout);
   }
 
   updateNumber = () => {
-    const nextNumber = this.state.number - 1
-    this.setState({
-      number: nextNumber
-    })
-    if (nextNumber !== 0) {
-      this.timeout = setTimeout(this.updateNumber, 1000)
-    }
-  }
+    this.setState(
+      (prevState) => ({number: prevState.number - 1}),
+      () => {
+        if (this.state.number !== 0) {
+          this.timeout = setTimeout(this.updateNumber, MS_SECOND);
+        }
+      },
+    );
+  };
 
-  render () {
-    return <Root>{this.state.number !== 0 ? this.state.number : null}</Root>
+  render() {
+    return <Root>{this.state.number === 0 ? null : this.state.number}</Root>;
   }
 }
