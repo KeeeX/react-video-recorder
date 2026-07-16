@@ -7,7 +7,8 @@
     "README.md"
   ],
   "scripts": {
-    "lint": "eslint .",
+    "check": "npm run lint",
+    "lint": "eslint src/",
     "clean": "rimraf -rf lib",
     "build": "babel src -d lib --copy-files",
     "build:watch": "babel --watch src -d lib --copy-files",
