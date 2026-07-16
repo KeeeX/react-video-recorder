@@ -6,6 +6,7 @@ import fixWebmDuration from "fix-webm-duration";
 import merge from "lodash.merge";
 import PropTypes from "prop-types";
 import React, {PureComponent} from "react";
+// eslint-disable-next-line import-x/no-named-as-default
 import styled, {css} from "styled-components";
 
 import {

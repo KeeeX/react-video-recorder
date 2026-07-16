@@ -64,5 +64,3 @@ lib
 
 .DS_Store
 .npmrc
-
-package-lock.json

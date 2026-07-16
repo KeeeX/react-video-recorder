@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React, {PureComponent} from "react";
+// eslint-disable-next-line import-x/no-named-as-default
 import styled from "styled-components";
 
 const Root = styled.div`
