@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "check": "npm run lint",
+    "test": "echo 'NO TESTS'",
     "lint": "eslint src/",
     "clean": "rimraf -rf lib",
     "build": "babel src -d lib --copy-files",
