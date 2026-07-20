@@ -70,7 +70,7 @@ class Timer extends PureComponent {
       const {seconds} = this.state;
       const nextSeconds = timeLimit ? seconds - 1 : seconds + 1;
 
-      const nextState = this.getState(nextSeconds);
+      const nextState = getState(nextSeconds);
       this.setState(nextState);
     }, SECOND_MS);
   }

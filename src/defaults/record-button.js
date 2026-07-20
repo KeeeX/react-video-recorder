@@ -4,8 +4,8 @@ import React from "react";
 import styled from "styled-components";
 
 const Button = styled.button`
-  background: ${(props) => props.backgroundColor};
-  color: ${(props) => props.color};
+  background: ${(props) => props.backgroundColor ?? "white"};
+  color: ${(props) => props.color ?? "black"};
   border-radius: 50%;
   width: 64px;
   height: 64px;
@@ -45,11 +45,6 @@ const InstuctionsHighlight = styled.div`
   color: #dc6547;
   padding: 0 5px;
 `;
-
-Button.defaultProps = {
-  color: "black",
-  backgroundColor: "white",
-};
 
 const RecordButton = ({t, ...props}) => (
   <RecWrapper>

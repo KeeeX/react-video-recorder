@@ -3,8 +3,8 @@ import React from "react";
 import styled from "styled-components";
 
 const Button = styled.button`
-  background: ${(props) => props.backgroundColor};
-  color: ${(props) => props.color};
+  background: ${(props) => props.backgroundColor ?? "white"};
+  color: ${(props) => props.color ?? "black"};
   border-radius: 4px;
   width: 40px;
   height: 40px;
@@ -25,11 +25,6 @@ const Border = styled.div`
   width: 80px;
   border-radius: 50%;
 `;
-
-Button.defaultProps = {
-  color: "black",
-  backgroundColor: "white",
-};
 
 const StopButton = (props) => (
   <Border>

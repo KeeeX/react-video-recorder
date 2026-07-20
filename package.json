@@ -14,7 +14,7 @@
     "build": "babel src -d lib --copy-files",
     "build:watch": "babel --watch src -d lib --copy-files",
     "prebuild": "npm run clean",
-    "prepublish": "cross-env NODE_ENV=production npm run build"
+    "prepublishOnly": "cross-env NODE_ENV=production npm run build"
   },
   "peerDependencies": {
     "prop-types": "^15.7.2",
