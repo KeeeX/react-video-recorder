@@ -3,11 +3,11 @@
 ## Installation
 
 ```sh
-yarn add react-video-recorder
+npm install @keeex/react-video-recorder
 
 # Note: this project has react, react-dom, prop-types & styled-components as peerDependencies,
 #       so if you're starting from scratch run this instead:
-yarn add react-video-recorder react react-dom prop-types styled-components
+npm install @keeex/react-video-recorder react react-dom prop-types styled-components
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ Basic usage [(edit in stakblitz)](https://stackblitz.com/edit/react-video-record
 ```js
 import React from "react";
 import {render} from "react-dom";
-import VideoRecorder from "react-video-recorder";
+import VideoRecorder from "@keeex/react-video-recorder";
 
 const App = () => (
   <VideoRecorder
@@ -82,21 +82,3 @@ View that's rendered an unexpected error occurs.
 Overlay that's rendered on top of the views and that contains the elements like the buttons, the timer or the countdown.
 
 [See the default implementation here.](src/defaults/render-actions.js)
-
-## Development
-
-Requirements
-
-`node version ">=8.3"`
-
-Install packages
-
-```sh
-yarn install
-```
-
-Run the storybook demo
-
-```sh
-yarn start
-```

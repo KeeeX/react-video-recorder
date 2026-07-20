@@ -228,8 +228,15 @@ export default class VideoRecorder extends PureComponent {
 
   componentWillUnmount() {
     this.turnOffCamera();
+    this.revokeVideoUrl();
     this.isComponentUnmounted = true;
   }
+
+  revokeVideoUrl = () => {
+    if (this.state.videoUrl) {
+      window.URL.revokeObjectURL(this.state.videoUrl);
+    }
+  };
 
   turnOnCamera = (deviceId = null) => {
     if (this.props.onTurnOnCamera) {
@@ -240,48 +247,43 @@ export default class VideoRecorder extends PureComponent {
       .enumerateDevices()
       .then((mediaDevices) => {
         const videoDevices = mediaDevices.filter((x) => x.kind === "videoinput");
-        if (deviceId && videoDevices[0] && videoDevices.find((x) => x.deviceId) === undefined) {
-          return this.handleError(new ReactVideoRecorderDeviceUnavailableError());
-        }
-
-        const currentDeviceId = typeof deviceId === "string" ? deviceId : videoDevices[0].deviceId;
 
         this.setState({
           availableDeviceIds: videoDevices.map((x) => x.deviceId),
-          currentDeviceId,
           error: null,
           isConnecting: true,
           isReplayingVideo: false,
           thereWasAnError: false,
         });
 
-        const fallbackContraints = {
+        const fallbackConstraints = {
           audio: true,
           video: true,
         };
 
-        const currentConstraints = merge(
-          {
-            video: {
-              deviceId: {
-                exact: currentDeviceId,
-              },
-            },
-          },
-          this.props.constraints,
-        );
+        const videoConstraints = deviceId
+          ? {deviceId: {exact: deviceId}}
+          : {facingMode: {ideal: "environment"}};
+
+        const currentConstraints = merge({video: videoConstraints}, this.props.constraints);
 
         return navigator.mediaDevices
           .getUserMedia(currentConstraints)
           .catch((err) => {
-            // there's a bug in chrome in some windows computers where using `ideal` in the constraints throws a NotReadableError
             if (err.name === "NotReadableError" || err.name === "OverconstrainedError") {
               console.warn(`Got ${err.name}, trying getUserMedia again with fallback constraints`);
-              return navigator.mediaDevices.getUserMedia(fallbackContraints);
+              return navigator.mediaDevices.getUserMedia(fallbackConstraints);
             }
             throw err;
           })
-          .then(this.handleSuccess)
+          .then((stream) => {
+            const track = stream.getVideoTracks()[0];
+            const settings = track && track.getSettings ? track.getSettings() : {};
+            const resolvedDeviceId = settings.deviceId || deviceId || videoDevices[0]?.deviceId;
+
+            this.setState({currentDeviceId: resolvedDeviceId});
+            return this.handleSuccess(stream);
+          })
           .catch(this.handleError);
       })
       .catch(this.handleError);
@@ -294,11 +296,6 @@ export default class VideoRecorder extends PureComponent {
       this.props.onSwitchCamera();
     }
     const {currentDeviceId, availableDeviceIds} = this.state;
-
-    // Stop media tracks
-    if (this.stream) {
-      this.stream.getTracks().forEach((stream) => stream.stop());
-    }
 
     const index = availableDeviceIds.findIndex((x) => x === currentDeviceId);
     const maxIndex = availableDeviceIds.length - 1;
@@ -371,12 +368,12 @@ export default class VideoRecorder extends PureComponent {
 
     clearTimeout(this.timeLimitTimeout);
 
-    this.setState((prevState) => ({
+    this.setState({
       error: err,
-      isConnecting: prevState.isConnecting && false,
+      isConnecting: false,
       isRecording: false,
       thereWasAnError: true,
-    }));
+    });
 
     if (this.state.isCameraOn) {
       this.turnOffCamera();
@@ -459,8 +456,7 @@ export default class VideoRecorder extends PureComponent {
     }
   };
 
-  getTotalEllapsedTimeInMs = () =>
-    Date.now() - this.lastRecordingTimestamp + this.recordingDuration;
+  getTotalElapsedTimeInMs = () => Date.now() - this.lastRecordingTimestamp + this.recordingDuration;
 
   handleStopRecording = () => {
     if (this.props.onStopRecording) {
@@ -473,7 +469,7 @@ export default class VideoRecorder extends PureComponent {
     }
 
     this.mediaRecorder.stop();
-    this.recordingDuration = this.getTotalEllapsedTimeInMs();
+    this.recordingDuration = this.getTotalElapsedTimeInMs();
   };
 
   handlePauseRecording = () => {
@@ -487,7 +483,7 @@ export default class VideoRecorder extends PureComponent {
     }
 
     this.mediaRecorder.pause();
-    this.recordingDuration = this.getTotalEllapsedTimeInMs();
+    this.recordingDuration = this.getTotalElapsedTimeInMs();
   };
 
   handleResumeRecording = () => {
@@ -532,14 +528,14 @@ export default class VideoRecorder extends PureComponent {
             isRunningCountdown: false,
             isRecording: true,
           });
-          this.startedAt = new Date().getTime();
+          this.startedAt = Date.now();
           this.mediaRecorder = new window.MediaRecorder(this.state.stream, options);
           this.mediaRecorder.addEventListener("stop", this.handleStop);
           this.mediaRecorder.addEventListener("error", this.handleError);
           this.mediaRecorder.addEventListener("dataavailable", this.handleDataAvailable);
 
           const {timeLimit, chunkSize, dataAvailableTimeout} = this.props;
-          this.mediaRecorder.start(chunkSize); // collect 10ms of data
+          this.mediaRecorder.start(chunkSize); // collect data in chunks of `chunckSize` ms
           this.lastRecordingTimestamp = Date.now();
           this.recordingDuration = 0;
 
@@ -571,7 +567,7 @@ export default class VideoRecorder extends PureComponent {
   };
 
   handleStop = (event) => {
-    const endedAt = new Date().getTime();
+    const endedAt = Date.now();
 
     if (!this.recordedBlobs || this.recordedBlobs.length <= 0) {
       const error = new ReactVideoRecorderRecordedBlobsUnavailableError(event);
@@ -597,6 +593,7 @@ export default class VideoRecorder extends PureComponent {
     this.mediaRecorder.ondataavailable = null;
 
     return this.fixVideoMetadata(videoBlob).then((fixedVideoBlob) => {
+      this.revokeVideoUrl();
       this.setState({
         isRecording: false,
         isReplayingVideo: true,

@@ -37,7 +37,7 @@ export default class Countdown extends PureComponent {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timeout);
+    clearTimeout(this.timeout);
   }
 
   updateNumber = () => {

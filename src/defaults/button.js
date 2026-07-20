@@ -2,8 +2,8 @@
 import styled from "styled-components";
 
 const Button = styled.button`
-  background: ${(props) => props.backgroundColor};
-  color: ${(props) => props.color};
+  background: ${(props) => props.backgroundColor ?? "white"};
+  color: ${(props) => props.color ?? "black"};
   border-radius: 4px;
   height: 40px;
   padding: 0px 18px;
@@ -18,10 +18,5 @@ const Button = styled.button`
     background: #eee;
   }
 `;
-
-Button.defaultProps = {
-  color: "black",
-  backgroundColor: "white",
-};
 
 export default Button;
